@@ -368,6 +368,8 @@ $config['proxy_ips'] = '';
 */
 $config['auto_update'] = FALSE;
 
+// Whether to automatically set new ideas to "considered" on creation
+$config['auto_approve_new_ideas'] = FALSE;
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */
