@@ -136,6 +136,10 @@ class Home extends CI_Controller {
 
 
     public function login($error = "NULL", $ban=0) {
+        if ($this->config->item('oauth2_enabled')) {
+            return $this->oauthlogin();
+        }
+
         if(@!isset($_SESSION['phpback_userid']) && @isset($_COOKIE['phpback_sessionid'])){
             $result = $this->get->verifyToken($_COOKIE['phpback_sessionid']);
             if($result != 0){
@@ -160,6 +164,39 @@ class Home extends CI_Controller {
 		$this->load->view('home/login', $data);
 		$this->load->view('_templates/menu', $data);
 		$this->load->view('_templates/footer', $data);
+    }
+    
+    public function oauthlogin($error = "NULL") {
+        if(@isset($_SESSION['phpback_userid'])) {
+            header('Location: '. base_url() .'home');
+            return;
+        }
+
+        if (! empty($_SESSION['oauth_info']['mail'])) {
+            $ok = $this->post->add_user(
+                $_SESSION['oauth_info']['name'], 
+                $_SESSION['oauth_info']['mail'], 
+                uniqid('random', true), 
+                $this->get->getSetting('maxvotes'), 
+                0
+            );
+            
+            $user = $this->get->getUserByEmail($_SESSION['oauth_info']['mail']);
+            $this->get->setSessionUserValues($user);
+            $this->get->setSessionCookie();
+            
+            header('Location: '. base_url() .'home');
+            return;            
+        }
+
+        $redirectAfterLogin = base_url() . 'home/login';
+
+        $oauthLogin = new Tistre\SimpleOAuthLogin\Login();
+        $oauthLogin->addServiceConfigsFromArray($this->config->item('oauth2_services'));
+
+        $oauthLoginPage = new Tistre\SimpleOAuthLogin\LoginPage($oauthLogin, $redirectAfterLogin);
+
+        $oauthLoginPage->processRequest();
     }
 
     public function postidea($error = "none") {

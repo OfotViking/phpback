@@ -154,6 +154,16 @@ class Get extends CI_Model
         return $this->get_row_by_id('users', $user_id);
     }
 
+
+    public function getUserByEmail($email){
+        $sql = $this->db->query("SELECT * FROM users WHERE email=" . $this->db->escape($email));
+        if($sql->num_rows() != 0){
+            return $sql->row();
+        }
+        return false;
+    }
+    
+
     public function getUserIdeas($user_id){
         $user_id = (int) $user_id;
         $ideas = $this->db->query("SELECT * FROM ideas WHERE authorid='$user_id'")->result();

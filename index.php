@@ -5,6 +5,8 @@ if(file_exists('install/index.php')){
 	exit;
 }
 
+require __DIR__ . '/vendor/autoload.php';
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

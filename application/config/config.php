@@ -371,5 +371,27 @@ $config['auto_update'] = FALSE;
 // Whether to automatically set new ideas to "considered" on creation
 $config['auto_approve_new_ideas'] = FALSE;
 
+// Instead of the login form, use OAuth2 for authentication
+// (authenticated users will be automatically created in the users table)
+$config['oauth2_enabled'] = FALSE;
+
+// OAuth2 service configuration, required if OAuth2 is enabled
+// Register your application at https://apps.dev.microsoft.com/
+/*
+$config['oauth2_services'] = [
+    Tistre\SimpleOAuthLogin\Login::SERVICE_MICROSOFT => [
+        'providerParams' => [
+            'clientId' => 'client-id',
+            'clientSecret' => 'client-secret',
+            'redirectUri' => 'https://example.com/feedback/home/login',
+            'urlAuthorize' => 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+            'urlAccessToken' => 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+            'urlResourceOwnerDetails' => '',
+            'scopes' => 'openid User.Read'
+        ]
+    ]
+];
+*/
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */
