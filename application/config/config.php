@@ -377,6 +377,7 @@ $config['oauth2_enabled'] = FALSE;
 
 // OAuth2 service configuration, required if OAuth2 is enabled
 // Register your application at https://apps.dev.microsoft.com/
+// https://developers.google.com/identity/protocols/OAuth2
 /*
 $config['oauth2_services'] = [
     Tistre\SimpleOAuthLogin\Login::SERVICE_MICROSOFT => [
@@ -388,6 +389,16 @@ $config['oauth2_services'] = [
             'urlAccessToken' => 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
             'urlResourceOwnerDetails' => '',
             'scopes' => 'openid User.Read'
+        ]
+    ]
+];
+$config['oauth2_services'] = [
+    Tistre\SimpleOAuthLogin\Login::SERVICE_GOOGLE => [
+        'providerParams' => [
+            'clientId' => '********.apps.googleusercontent.com',
+            'clientSecret' => '*******',
+            'redirectUri' => 'https://example.com/feedback/home/login'
+            #'hostedDomain' => '*'
         ]
     ]
 ];
