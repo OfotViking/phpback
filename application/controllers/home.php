@@ -10,6 +10,8 @@ See LICENSE.TXT for details.
 
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+use Tistre\SimpleOAuthLogin\Login;
+
 class Home extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
@@ -171,7 +173,28 @@ class Home extends CI_Controller {
             header('Location: '. base_url() .'home');
             return;
         }
+        function getService(Login $oauthLogin) {
+            $service = '';
+            $configuredServices = $oauthLogin->getConfiguredServices();
 
+            if (!empty($_SERVER['PATH_INFO'])) {
+                $service = basename($_SERVER['PATH_INFO']);
+            } elseif (!empty($_COOKIE['oauth_provider'])) {
+                $service = $_COOKIE['oauth_provider'];
+            } elseif (count($configuredServices) === 1) {
+                $service = $configuredServices[0];
+            }
+            if (!in_array($service, $configuredServices)) {
+                $service = '';
+            }
+            return $service;
+        }
+        $redirectAfterLogin = base_url() . 'home/login';
+        $oauthLogin = new Tistre\SimpleOAuthLogin\Login();
+        $oauthLogin->addServiceConfigsFromArray($this->config->item('oauth2_services'));
+        $service = getService($oauthLogin);
+        $oauthLoginPage = new Tistre\SimpleOAuthLogin\LoginPage($oauthLogin, $service, $redirectAfterLogin);
+        
         if (! empty($_SESSION['oauth_info']['mail'])) {
             $ok = $this->post->add_user(
                 $_SESSION['oauth_info']['name'], 
@@ -180,7 +203,6 @@ class Home extends CI_Controller {
                 $this->get->getSetting('maxvotes'), 
                 0
             );
-            
             $user = $this->get->getUserByEmail($_SESSION['oauth_info']['mail']);
             $this->get->setSessionUserValues($user);
             $this->get->setSessionCookie();
@@ -188,14 +210,6 @@ class Home extends CI_Controller {
             header('Location: '. base_url() .'home');
             return;            
         }
-
-        $redirectAfterLogin = base_url() . 'home/login';
-
-        $oauthLogin = new Tistre\SimpleOAuthLogin\Login();
-        $oauthLogin->addServiceConfigsFromArray($this->config->item('oauth2_services'));
-
-        $oauthLoginPage = new Tistre\SimpleOAuthLogin\LoginPage($oauthLogin, $redirectAfterLogin);
-
         $oauthLoginPage->processRequest();
     }
 
