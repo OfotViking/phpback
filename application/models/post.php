@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// ini_set('display_errors', 1);
 
 /*********************************************************************
 PHPBack
@@ -74,6 +74,10 @@ class Post extends CI_Model
 			);
         $this->db->insert('ideas', $data);
       	$this->log($this->lang->language['log_new_idea'] . ": $title", "user", $author_id);
+        if ($this->config->item('auto_approve_new_ideas')) {
+            $idea = $this->db->query("SELECT * FROM ideas WHERE title='$title'")->row();
+            $this->approveidea($idea->id);
+        }
         return true;
     }
 
