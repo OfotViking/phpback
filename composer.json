@@ -8,6 +8,6 @@
     "require": {
         "visualappeal/php-auto-update": "^0.9.2",
         "tistre/simple-oauth-login": "dev-master",
-        "league/oauth2-google": "^2.0"
+        "league/oauth2-google": "^3.0"
     }
 }
